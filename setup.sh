@@ -44,11 +44,11 @@ fi
 
 echo "✅ Ambiente configurado com sucesso!"
 echo ""
-echo "🌐 Serviços disponíveis:"
-echo "  - Aplicação Laravel: http://localhost:8000"
-echo "  - phpMyAdmin: http://localhost:8080"
-echo "  - Mailhog: http://localhost:8025"
-echo "  - MySQL: localhost:3307"
+echo "🌐 Serviços disponíveis:"/
+echo "  - Aplicação Laravel: http://localhost:8800"
+echo "  - phpMyAdmin: http://localhost:8088/"
+echo "  - Mailhog: http://localhost:8025/"
+echo "  - MySQL: http://localhost:3307"
 echo ""
 echo "📚 Comandos úteis:"
 echo "  - Acessar container da aplicação: docker-compose exec app bash"
