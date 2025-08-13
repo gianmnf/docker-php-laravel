@@ -8,8 +8,6 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-      - ./docker/apache/sites-available:/etc/apache2/sites-available
-      - ./docker/apache/apache2.conf:/etc/apache2/apache2.conf
     ports:
       - "8800:80"
       - "8443:443"
