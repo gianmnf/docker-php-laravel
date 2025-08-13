@@ -1,0 +1,90 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/apache/sites-available:/etc/apache2/sites-available
+      - ./docker/apache/apache2.conf:/etc/apache2/apache2.conf
+    ports:
+      - "8800:80"
+      - "8443:443"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    depends_on:
+      - mysql
+    networks:
+      - laravel_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: laravel_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3307:3306"
+    networks:
+      - laravel_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: laravel_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8088:80"
+    depends_on:
+      - mysql
+    networks:
+      - laravel_network
+
+  node:
+    image: node:20-alpine
+    container_name: laravel_node
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - node_modules:/var/www/html/node_modules
+    ports:
+      - "3000:3000"
+      - "5173:5173"
+    tty: true
+    networks:
+      - laravel_network
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: laravel_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - laravel_network
+
+volumes:
+  mysql_data:
+    driver: local
+  node_modules:
+    driver: local
+
+networks:
+  laravel_network:
+    driver: bridge
